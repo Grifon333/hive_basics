@@ -13,8 +13,12 @@ class ExampleWidgetModel {
     var box = await Hive.openBox<Customer>('Customer_box');
     final customer = Customer('Mark', 20, 30000, 23, 'Online');
     await box.add(customer);
-    final customerFromBox = box.getAt(0);
 
+    final customerFromBox = box.getAt(0);
+    customerFromBox?.status = 'Offline';
+    await customerFromBox?.save();
+
+    print(box.values);
     print(customerFromBox);
   }
 }
