@@ -32,6 +32,9 @@ class ExampleWidgetModel {
 
     print(box.values);
     print(customerFromBox);
+
+    await box.compact();
+    await box.close();
   }
 }
 
