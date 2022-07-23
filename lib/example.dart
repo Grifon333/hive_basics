@@ -19,14 +19,19 @@ class _ExampleWidgetState extends State<ExampleWidget> {
             child: Column(
               children: [
                 ElevatedButton(
-                  onPressed: model.doSome,
-                  child: const Text('Press me'),
+                  onPressed: model.add,
+                  child: const Text('Add'),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: model.secureStorage,
-                  child: const Text('Save secure storage'),
+                  onPressed: model.setup,
+                  child: const Text('Setup'),
                 ),
+                // const SizedBox(height: 10),
+                // ElevatedButton(
+                //   onPressed: model.secureStorage,
+                //   child: const Text('Save secure storage'),
+                // ),
               ],
             ),
           ),

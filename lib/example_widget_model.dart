@@ -1,40 +1,43 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
-import 'package:hive_basics/book.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'book.dart';
 import 'customer.dart';
 
 class ExampleWidgetModel {
-
-  void doSome() async {
+  Future<Box<Customer>>? customersBox;
+  Future<Box<Book>>? booksBox;
+  
+  void setup() {
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(CustomerAdapter());
     }
+    customersBox = Hive.openBox<Customer>('customersBox');
+    customersBox?.then(
+          (box) => box.listenable().addListener(() {
+            print(box.length);
+          })
+    );
+
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(BookAdapter());
     }
+    booksBox = Hive.openBox<Book>('booksBox');
+  }
 
-    var box = await Hive.openBox<Customer>('Customer_box');
-    var booksBox = await Hive.openBox<Book>('books_box');
+  void add() async {
+    final box_c = await customersBox;
+    final box_b = await booksBox;
+    
+    final book = Book('Mirror', 305, 'Konan Doil');
+    await box_b?.add(book);
+    final books = HiveList(box_b!, objects: [book]);
 
-    final book = Book('Stive Jobs', 500, 'Uolter Aizekson');
-    await booksBox.add(book);
-    final books = HiveList(booksBox, objects: [book]);
-    var customer = Customer('Mark', 20, 30000, 23, 'Online', books);
-    await box.add(customer);
-
-    final customerFromBox = box.getAt(0);
-    customerFromBox?.status = 'Offline';
-    await customerFromBox?.save();
-
-    print(box.values);
-    print(customerFromBox);
-
-    await box.compact();
-    await box.close();
+    final customer = Customer('Greh', 25, 41025, 290, 'Online', books);
+    await box_c?.add(customer);
   }
 
   void secureStorage() async {
